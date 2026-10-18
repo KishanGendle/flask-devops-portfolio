@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Verify OTP | Portfolio</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: Arial, sans-serif;
+            background: #0f172a;
+            color: #ffffff;
+        }
+
+        .otp-card {
+            width: 90%;
+            max-width: 400px;
+            padding: 32px;
+            box-sizing: border-box;
+            border-radius: 16px;
+            background: #1e293b;
+            border: 1px solid #334155;
+            text-align: center;
+        }
+
+        .otp-card h1 {
+            margin-top: 0;
+            font-size: 26px;
+        }
+
+        .otp-card p {
+            color: #cbd5e1;
+            line-height: 1.6;
+        }
+
+        .otp-input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 14px;
+            margin: 16px 0;
+            border: 1px solid #475569;
+            border-radius: 8px;
+            background: #0f172a;
+            color: white;
+            font-size: 22px;
+            text-align: center;
+            letter-spacing: 6px;
+        }
+
+        .otp-button {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            background: #38bdf8;
+            color: #0f172a;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .otp-button:hover {
+            background: #7dd3fc;
+        }
+
+        .alert {
+            margin: 12px 0;
+            padding: 10px;
+            border-radius: 6px;
+            background: #334155;
+            overflow-wrap: anywhere;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #7dd3fc;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+    <main class="otp-card">
+        <h1>Verify Your OTP</h1>
+
+        <p>
+            Enter the 6-digit verification code sent to your email.
+            The code expires in 5 minutes.
+        </p>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+                <div class="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endwith %}
+
+        <form method="POST" action="{{ url_for('verify_otp') }}">
+            <input type="hidden" name="csrf_token"
+                   value="{{ csrf_token() }}">
+
+            <input
+                type="text"
+                name="otp"
+                class="otp-input"
+                placeholder="000000"
+                inputmode="numeric"
+                pattern="[0-9]{6}"
+                minlength="6"
+                maxlength="6"
+                autocomplete="one-time-code"
+                aria-label="6-digit OTP"
+                required
+            >
+
+            <button type="submit" class="otp-button">
+                Verify OTP
+            </button>
+        </form>
+
+        <a class="back-link"
+           href="{{ url_for('email_login') }}">
+            Back to Email Login
+        </a>
+    </main>
+</body>
+</html>

@@ -1,0 +1,48 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Login | Kishan Gendle</title>
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <section class="contact-section">
+        <div class="container" style="max-width: 520px;">
+            <h2 class="section-title">Login to Continue</h2>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}" role="status">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endwith %}
+
+            <div class="contact-form">
+                <p style="margin-bottom: 24px;">
+                    Please sign in before sending a contact message.
+                </p>
+
+                <a class="btn btn-primary btn-full"
+                   href="{{ url_for('google_login') }}">
+                    Continue with Google
+                </a>
+
+                <p style="text-align:center; margin:20px 0;">OR</p>
+
+                <a class="btn btn-secondary btn-full"
+                   href="{{ url_for('email_login') }}">
+                    Continue with Email OTP
+                </a>
+
+                <p style="text-align:center; margin-top:24px;">
+                    <a href="{{ url_for('home') }}">Back to portfolio</a>
+                </p>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

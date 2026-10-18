@@ -1,0 +1,38 @@
+services:
+  db:
+    image: mysql:8.4
+    container_name: profile-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?Set MYSQL_ROOT_PASSWORD in .env}
+      MYSQL_DATABASE: profile_db
+      MYSQL_USER: profile_user
+      MYSQL_PASSWORD: ${DOCKER_MYSQL_PASSWORD:?Set DOCKER_MYSQL_PASSWORD in .env}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p\"$$MYSQL_ROOT_PASSWORD\" --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  web:
+    build: .
+    container_name: flask-profile
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      MYSQL_HOST: db
+      MYSQL_PORT: "3306"
+      MYSQL_USER: profile_user
+      MYSQL_PASSWORD: ${DOCKER_MYSQL_PASSWORD:?Set DOCKER_MYSQL_PASSWORD in .env}
+      MYSQL_DATABASE: profile_db
+    ports:
+      - "5000:5000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  mysql_data:
