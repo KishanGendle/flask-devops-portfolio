@@ -277,7 +277,7 @@ def login():
 
 @app.get("/login/google")
 def google_login():
-    callback = url_for("google_callback", _external=True)
+    callback = callback = os.getenv("GOOGLE_REDIRECT_URI") or url_for("google_callback", _external=True)
     return oauth.google.authorize_redirect(callback)
 
 
